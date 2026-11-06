@@ -27,6 +27,12 @@ const client = new Client({
   intents: [GatewayIntentBits.Guilds],
 });
 
+/** Text channels and announcement (“news”) channels can receive normal messages. */
+const POSTABLE_CHANNEL_TYPES = new Set([
+  ChannelType.GuildText,
+  ChannelType.GuildAnnouncement,
+]);
+
 /**
  * @param {string | undefined} channelId
  * @param {string} label
@@ -36,9 +42,17 @@ async function resolveTextChannel(channelId, label) {
     console.warn(`[${label}] No channel ID set — skipping.`);
     return null;
   }
-  const ch = await client.channels.fetch(channelId).catch(() => null);
-  if (!ch || ch.type !== ChannelType.GuildText) {
-    console.error(`[${label}] Channel ${channelId} not found or not a text channel.`);
+  const ch = await client.channels.fetch(channelId).catch((err) => {
+    console.error(`[${label}] Channel ${channelId} fetch failed:`, err?.message || err);
+    return null;
+  });
+  if (!ch) {
+    return null;
+  }
+  if (!POSTABLE_CHANNEL_TYPES.has(ch.type)) {
+    console.error(
+      `[${label}] Channel ${channelId} is type ${ch.type} — use a text or announcement channel.`
+    );
     return null;
   }
   return ch;
