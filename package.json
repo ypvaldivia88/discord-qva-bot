@@ -1,0 +1,20 @@
+{
+  "name": "discord-qva-bot",
+  "version": "1.0.0",
+  "description": "Discord bot: WoW news and deals from RSS feeds (self-hosted)",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "discord.js": "^14.16.3",
+    "dotenv": "^16.4.5",
+    "node-cron": "^3.0.3",
+    "rss-parser": "^3.13.0"
+  }
+}
